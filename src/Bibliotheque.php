@@ -68,4 +68,29 @@ class Bibliotheque
         }
         return $resultats;
     }
+        /**
+     * Calcule des statistiques sur le catalogue.
+     * @return array{total:int, disponibles:int, empruntes:int, tauxDisponibilite:float}
+     */
+    public function statistiques(): array
+    {
+        $total = count($this->livres);
+        $disponibles = 0;
+
+        foreach ($this->livres as $livre) {
+            if ($livre->estDisponible()) {
+                $disponibles++;
+            }
+        }
+
+        $empruntes = $total - $disponibles;
+        $taux = $total > 0 ? round(($disponibles / $total) * 100, 2) : 0.0;
+
+        return [
+            'total'              => $total,
+            'disponibles'        => $disponibles,
+            'empruntes'          => $empruntes,
+            'tauxDisponibilite'  => $taux,
+        ];
+    }
 }
