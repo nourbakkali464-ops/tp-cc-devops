@@ -58,3 +58,17 @@ $l4 = new Livre('9780596007126', 'Algo Avance', 'Cormen');
 $bib->ajouter($l4);
 $res4 = $bib->rechercher('algo');
 verifier(count($res4) === 2, 'rechercher("algo") trouve 2 livres');
+
+// Test : statistiques du catalogue (4 livres, tous disponibles par defaut)
+$stats = $bib->statistiques();
+verifier($stats['total'] === 4,             'statistiques() : total = 4');
+verifier($stats['disponibles'] === 4,       'statistiques() : 4 disponibles');
+verifier($stats['empruntes'] === 0,         'statistiques() : 0 emprunte');
+verifier($stats['tauxDisponibilite'] === 100.0, 'statistiques() : taux = 100%');
+
+// Test : statistiques avec un livre emprunte
+$l4->setDisponible(false); // si le setter existe
+$stats2 = $bib->statistiques();
+verifier($stats2['empruntes'] === 1,            'statistiques() : 1 emprunte apres mise a jour');
+verifier($stats2['tauxDisponibilite'] === 75.0, 'statistiques() : taux = 75%');
+$l4->setDisponible(true); // remise en etat pour les tests suivants
